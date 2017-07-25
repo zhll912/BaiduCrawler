@@ -5,8 +5,6 @@ from lxml import etree
 import random
 import ip_pool
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 """
 ================================================
@@ -75,17 +73,17 @@ def extract_all_text(keyword_dict, keyword_text, ip_factory):
         # 获取代理IP数据
         for ip in ip_factory.get_proxies():
             useful_proxies[ip] = 0
-        print "总共：" + str(len(useful_proxies)) + 'IP可用'
+        print ("总共：" + str(len(useful_proxies)) + 'IP可用')
     except OSError:
-        print "获取代理ip时出错！"
+        print ("获取代理ip时出错！")
 
-    cn = open(keyword_dict, 'r')
-    with open(keyword_text, 'w') as ct:
+    cn = open(keyword_dict, 'r',encoding='utf8')
+    with open(keyword_text, 'w',encoding='utf8') as ct:
         # 逐行读取关键词
         for line in cn:
             # 设置随机代理
-            proxy = random.choice(useful_proxies.keys())
-            print "change proxies: " + proxy
+            proxy = random.choice(list(useful_proxies.keys()))
+            print ("change proxies: " + proxy)
 
             content = ''
             try:
@@ -101,7 +99,7 @@ def extract_all_text(keyword_dict, keyword_text, ip_factory):
 
             raw_text = html_parser(content)
             raw_text = raw_text.replace('\n', '||')
-            print raw_text
+            print (raw_text)
 
             # 写入数据到文件
             ct.write(line.strip()+':\t'+raw_text+'\n')

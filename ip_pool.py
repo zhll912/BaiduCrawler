@@ -56,7 +56,7 @@ class IPFactory:
             cursor.execute(create_table_str)
             conn.commit()
         except OSError:
-            print "无法创建数据库！"
+            print ("无法创建数据库！")
         finally:
             cursor.close()
             conn.close()
@@ -93,7 +93,7 @@ class IPFactory:
                     # 存储
                     ip_list.append(full_ip)
         except Exception as e:
-            print 'get proxies error: ', e
+            print ('get proxies error: ', e)
 
         return ip_list
 
@@ -109,7 +109,7 @@ class IPFactory:
         ###################################
         url_xpath_66 = '/html/body/div[last()]//table//tr[position()>1]/td[1]/text()'
         port_xpath_66 = '/html/body/div[last()]//table//tr[position()>1]/td[2]/text()'
-        for i in xrange(self.page_num):
+        for i in range(self.page_num):
             url_66 = 'http://www.66ip.cn/' + str(i+1) + '.html'
             results = self.get_content(url_66, url_xpath_66, port_xpath_66)
             self.all_ip.update(results)
@@ -122,7 +122,7 @@ class IPFactory:
         ###################################
         url_xpath_xici = '//table[@id="ip_list"]//tr[position()>1]/td[position()=2]/text()'
         port_xpath_xici = '//table[@id="ip_list"]//tr[position()>1]/td[position()=3]/text()'
-        for i in xrange(self.page_num):
+        for i in range(self.page_num):
             url_xici = 'http://www.xicidaili.com/nn/' + str(i+1)
             results = self.get_content(url_xici, url_xpath_xici, port_xpath_xici)
             self.all_ip.update(results)
@@ -134,7 +134,7 @@ class IPFactory:
         ###################################
         url_xpath_mimi = '//table[@class="list"]//tr[position()>1]/td[1]/text()'
         port_xpath_mimi = '//table[@class="list"]//tr[position()>1]/td[2]/text()'
-        for i in xrange(self.page_num):
+        for i in range(self.page_num):
             url_mimi = 'http://www.mimiip.com/gngao/' + str(i+1)
             results = self.get_content(url_mimi, url_xpath_mimi, port_xpath_mimi)
             self.all_ip.update(results)
@@ -146,7 +146,7 @@ class IPFactory:
         ###################################
         url_xpath_kuaidaili = '//td[@data-title="IP"]/text()'
         port_xpath_kuaidaili = '//td[@data-title="PORT"]/text()'
-        for i in xrange(self.page_num):
+        for i in range(self.page_num):
             url_kuaidaili = 'http://www.kuaidaili.com/free/inha/' + str(i+1) + '/'
             results = self.get_content(url_kuaidaili, url_xpath_kuaidaili, port_xpath_kuaidaili)
             self.all_ip.update(results)
@@ -176,11 +176,11 @@ class IPFactory:
                 end = time.time()
                 # 判断是否可用
                 if r.text is not None:
-                    print 'succeed: ' + p + '\t' + " in " + format(end-start, '0.2f') + 's'
+                    print ('succeed: ' + p + '\t' + " in " + format(end-start, '0.2f') + 's')
                     # 追加代理ip到返回的set中
                     results.add(p)
             except OSError:
-                print 'timeout:', p
+                print ('timeout:', p)
 
         return results
 
@@ -190,7 +190,7 @@ class IPFactory:
         """
         # 循环检查次数
         for i in range(round):
-            print "\n>>>>>>>\tRound\t"+str(i+1)+"\t<<<<<<<<<<"
+            print ("\n>>>>>>>\tRound\t"+str(i+1)+"\t<<<<<<<<<<")
             # 检查代理是否可用
             valid_ip = self.get_valid_ip(valid_ip, timeout)
             # 停一下
@@ -205,10 +205,10 @@ class IPFactory:
         将可用的ip存储进mysql数据库
         """
         if len(valid_ips) == 0:
-            print "本次没有抓到可用ip。"
+            print ("本次没有抓到可用ip。")
             return
         # 连接数据库
-        print "\n>>>>>>>>>>>>>>>>>>>> 代理数据入库处理 Start  <<<<<<<<<<<<<<<<<<<<<<\n"
+        print ("\n>>>>>>>>>>>>>>>>>>>> 代理数据入库处理 Start  <<<<<<<<<<<<<<<<<<<<<<\n")
         conn = mdb.connect(cfg.host, cfg.user, cfg.passwd, cfg.DB_NAME)
         cursor = conn.cursor()
         try:
@@ -224,18 +224,18 @@ class IPFactory:
 
                     # 输出入库状态
                     if n:
-                        print datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+item+" 插入成功。\n"
+                        print (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+item+" 插入成功。\n")
                     else:
-                        print datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+item+" 插入失败。\n"
+                        print (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+item+" 插入失败。\n")
 
                 else:
-                    print datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+ item +" 已存在。\n"
+                    print (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+ item +" 已存在。\n")
         except Exception as e:
-            print "入库失败：" + str(e)
+            print ("入库失败：" + str(e))
         finally:
             cursor.close()
             conn.close()
-        print "\n>>>>>>>>>>>>>>>>>>>> 代理数据入库处理 End  <<<<<<<<<<<<<<<<<<<<<<\n"
+        print ("\n>>>>>>>>>>>>>>>>>>>> 代理数据入库处理 End  <<<<<<<<<<<<<<<<<<<<<<\n")
 
     def get_proxies(self):
         ip_list = []
@@ -262,7 +262,7 @@ class IPFactory:
                 self.save_to_db(valid_ips)
                 ip_list.extend(valid_ips)
         except Exception as e:
-            print "从数据库获取ip失败！"
+            print ("从数据库获取ip失败！")
         finally:
             cursor.close()
             conn.close()
